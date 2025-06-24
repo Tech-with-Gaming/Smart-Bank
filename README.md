@@ -18,7 +18,7 @@ A comprehensive console-based banking application written in Python with SQLite 
 ↪    ├── 📄 DOCUMENTATION.txt    - Detailed technical documentation
 └── 📄 database.db          - SQLite database (auto-generated)
 └── 📄 README.md            - Project documentation
-└── 📁 screenshots/          - Screenshots of the application's functionality
+└── 📁 screenshots/         - Screenshots of the application's functionality
 ```
 
 

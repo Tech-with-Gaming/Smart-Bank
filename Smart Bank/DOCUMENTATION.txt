@@ -1,0 +1,558 @@
+================================================================================
+                        SMART BANK SYSTEM - TECHNICAL DOCUMENTATION
+================================================================================
+
+PROJECT OVERVIEW:
+Smart Bank is a comprehensive console-based banking application written in Python.
+It provides a complete banking experience with user account management, transactions,
+and administrative controls using SQLite database for data persistence.
+
+================================================================================
+                                FILE STRUCTURE
+================================================================================
+
+📁 Smart Bank/
+├── 📄 main.py              - Application entry point
+├── 📄 account.py           - Core banking operations and database models
+├── 📄 interface.py         - User interface and menu systems
+├── 📄 admin.py             - Administrative panel and functions
+├── 📄 utils.py             - Utility functions (optional helpers)
+├── 📄 README.md            - Project documentation
+├── 📄 DOCUMENTATION.txt    - This technical documentation
+└── 📄 database.db          - SQLite database (created automatically)
+
+================================================================================
+                                MAIN.PY - APPLICATION ENTRY
+================================================================================
+
+FUNCTIONS:
+----------
+
+1. clear_screen()
+   Purpose: Clears the terminal/console screen
+   Parameters: None
+   Returns: None
+   Usage: Called before displaying new menus for clean interface
+
+2. print_banner()
+   Purpose: Displays the ASCII art "Smart Bank" logo
+   Parameters: None
+   Returns: None
+   Features: Uses colorama for blue colored banner
+
+3. loading_animation()
+   Purpose: Shows animated loading sequence
+   Parameters: None
+   Returns: None
+   Features: Displays "Loading Smart Bank System..." with dots animation
+
+4. main()
+   Purpose: Main application entry point
+   Parameters: None
+   Returns: None
+   Flow: Banner → Loading → Main Menu Interface
+
+================================================================================
+                            ACCOUNT.PY - CORE BANKING SYSTEM
+================================================================================
+
+CLASS: BankAccount
+------------------
+
+CONSTRUCTOR:
+__init__(self, first_name, last_name, pin, balance=0)
+   Purpose: Initialize new bank account object
+   Parameters:
+     - first_name (str): Account holder's first name
+     - last_name (str): Account holder's last name  
+     - pin (str): 4-digit PIN for account security
+     - balance (float): Initial account balance (default: 0)
+
+INSTANCE METHODS:
+-----------------
+
+1. create_accounts(self)
+   Purpose: Creates SQLite database table structure
+   Parameters: None
+   Returns: None
+   Database Schema:
+     - Acc_Number: INTEGER PRIMARY KEY (auto-increment)
+     - First_Name: TEXT NOT NULL (min 2 chars)
+     - Last_Name: TEXT NOT NULL (min 2 chars)
+     - Pin: TEXT UNIQUE (exactly 4 digits)
+     - Balance: REAL DEFAULT 0 (non-negative)
+     - Creation_Date: TEXT DEFAULT CURRENT_TIMESTAMP
+
+2. save_to_database(self)
+   Purpose: Saves account instance to database
+   Parameters: None
+   Returns: Account number (int) or raises ValueError
+   Exceptions:
+     - "PIN_ALREADY_EXISTS": If PIN is already in use
+     - "DATABASE_ERROR": For other database issues
+
+3. view_balance(self)
+   Purpose: Returns current account balance
+   Parameters: None
+   Returns: float (current balance)
+
+4. deposit(self, amount)
+   Purpose: Adds money to account
+   Parameters: amount (float) - Amount to deposit
+   Returns: bool (True if successful, False if invalid amount)
+   Validation: Amount must be positive
+
+5. withdraw(self, amount)
+   Purpose: Removes money from account
+   Parameters: amount (float) - Amount to withdraw
+   Returns: bool (True if successful, False if insufficient funds)
+   Validation: Amount must be positive and ≤ current balance
+
+6. change_pin(self, new_pin)
+   Purpose: Updates account PIN
+   Parameters: new_pin (str) - New 4-digit PIN
+   Returns: bool (True if successful, False if invalid format)
+   Validation: Must be exactly 4 digits
+
+7. change_name(self, new_first_name, new_last_name)
+   Purpose: Updates account holder's name
+   Parameters: 
+     - new_first_name (str): New first name
+     - new_last_name (str): New last name
+   Returns: bool (True if successful, False if invalid)
+   Validation: Both names must be ≥2 characters
+
+8. update_balance_in_database(self)
+   Purpose: Syncs balance changes to database
+   Parameters: None
+   Returns: None
+
+9. update_pin_in_database(self)
+   Purpose: Syncs PIN changes to database
+   Parameters: None
+   Returns: None
+
+10. update_name_in_database(self)
+    Purpose: Syncs name changes to database
+    Parameters: None
+    Returns: None
+
+11. get_account_info(self)
+    Purpose: Returns account information as dictionary
+    Parameters: None
+    Returns: dict with keys: account_number, first_name, last_name, balance
+
+UTILITY FUNCTIONS:
+------------------
+
+1. check_pin_exists(pin)
+   Purpose: Checks if PIN is already in database
+   Parameters: pin (str) - PIN to check
+   Returns: bool (True if exists, False otherwise)
+
+2. load_account_from_database(account_number, pin)
+   Purpose: Loads account from database using credentials
+   Parameters:
+     - account_number (int): Account number
+     - pin (str): Account PIN
+   Returns: BankAccount object or None if invalid credentials
+
+3. get_all_accounts()
+   Purpose: Retrieves all accounts from database (admin function)
+   Parameters: None
+   Returns: List of tuples containing all account data
+
+4. delete_account_from_database(account_number)
+   Purpose: Deletes account from database (admin function)
+   Parameters: account_number (int) - Account to delete
+   Returns: bool (True if deleted, False if not found)
+
+================================================================================
+                            INTERFACE.PY - USER INTERFACE
+================================================================================
+
+MAIN INTERFACE FUNCTIONS:
+-------------------------
+
+1. main_menu()
+   Purpose: Main application menu loop
+   Parameters: None
+   Returns: None
+   Options: Create Account, User Login, Admin Panel, Exit
+
+2. admin_pin()
+   Purpose: Admin authentication gateway
+   Parameters: None
+   Returns: None
+   Flow: Calls admin_login() and admin_menu() from admin.py
+
+3. admin_banner()
+   Purpose: Displays "Admin Panel" ASCII art
+   Parameters: None
+   Returns: None
+
+4. exit_banner()
+   Purpose: Displays "Thank You!" ASCII art on exit
+   Parameters: None
+   Returns: None
+
+USER AUTHENTICATION:
+--------------------
+
+5. user_login()
+   Purpose: Handles user login process
+   Parameters: None
+   Returns: None
+   Flow: Get credentials → Validate → Load account → Account menu
+   Validation: Account number (digits only), PIN (4 digits)
+
+ACCOUNT OPERATIONS INTERFACE:
+-----------------------------
+
+6. account_menu(account)
+   Purpose: Main menu for logged-in users
+   Parameters: account (BankAccount) - Logged in user's account
+   Returns: None
+   Options: View Balance, Deposit, Withdraw, Change PIN, Change Name, Logout
+
+7. display_balance(account)
+   Purpose: Shows formatted account balance
+   Parameters: account (BankAccount)
+   Returns: None
+
+8. deposit_money(account)
+   Purpose: Interface for money deposits
+   Parameters: account (BankAccount)
+   Returns: None
+   Validation: Positive numeric amounts only
+
+9. withdraw_money(account)
+   Purpose: Interface for money withdrawals
+   Parameters: account (BankAccount)
+   Returns: None
+   Features: Shows available balance, validates sufficient funds
+
+10. change_pin_interface(account)
+    Purpose: Interface for PIN changes
+    Parameters: account (BankAccount)
+    Returns: None
+    Validation: 4-digit numeric PIN
+
+11. change_name_interface(account)
+    Purpose: Interface for name changes
+    Parameters: account (BankAccount)
+    Returns: None
+    Validation: ≥2 characters, alphabetic only
+
+ACCOUNT CREATION:
+-----------------
+
+12. create_account_interface()
+    Purpose: Complete new account creation workflow
+    Parameters: None
+    Returns: None
+    Validation Steps:
+      - First/Last name: ≥2 chars, alphabetic
+      - PIN: 4 digits, unique
+      - Initial deposit: Non-negative number
+    Output: Displays new account details
+
+================================================================================
+                            ADMIN.PY - ADMINISTRATIVE PANEL
+================================================================================
+
+CONFIGURATION:
+--------------
+ADMIN_PIN = "2008" (hardcoded admin access PIN)
+
+AUTHENTICATION:
+---------------
+
+1. admin_login()
+   Purpose: Admin authentication with retry option
+   Parameters: None
+   Returns: bool (True if authenticated, False otherwise)
+   Features: Multiple attempt handling with user confirmation
+
+ADMINISTRATIVE FUNCTIONS:
+-------------------------
+
+2. remove_account()
+   Purpose: Delete user accounts from database
+   Parameters: None
+   Returns: None
+   Features:
+     - Lists all accounts in tabular format
+     - Requires account number input
+     - Confirmation prompt with account details
+     - Requires typing "DELETE" to confirm
+
+3. admin_change_pin()
+   Purpose: Change any user's PIN (admin override)
+   Parameters: None
+   Returns: None
+   Features:
+     - Account lookup by number
+     - Shows current account details
+     - Validates new PIN uniqueness
+     - Direct database update
+
+4. clear_database()
+   Purpose: Delete ALL accounts from database
+   Parameters: None
+   Returns: None
+   Security Features:
+     - Triple confirmation required
+     - Must type "CLEAR", "YES", "DELETE ALL"
+     - Shows account count before deletion
+     - Irreversible operation warning
+
+5. view_all_accounts()
+   Purpose: Display all accounts in formatted table
+   Parameters: None
+   Returns: None
+   Features:
+     - Complete account listing
+     - Total account count
+     - Total bank balance calculation
+     - Professional tabular format
+
+6. admin_menu()
+   Purpose: Main admin panel interface
+   Parameters: None
+   Returns: None
+   Options:
+     [1] View All Accounts
+     [2] Remove Account  
+     [3] Change User PIN
+     [4] Clear Database
+     [5] Back to Main Menu
+
+UTILITY:
+--------
+
+7. clear_screen()
+   Purpose: Clear terminal screen (duplicate of main.py function)
+   Parameters: None
+   Returns: None
+
+================================================================================
+                            UTILS.PY - UTILITY FUNCTIONS
+================================================================================
+
+Note: This file contains placeholder functions that are not implemented.
+The core application works without these utilities.
+
+PLACEHOLDER FUNCTIONS:
+----------------------
+
+1. validate_pin(pin) - PIN format validation
+2. validate_amount(amount) - Monetary amount validation  
+3. validate_name(name) - Name format validation
+4. format_currency(amount) - Money display formatting
+5. generate_account_number() - Unique account number generation
+
+================================================================================
+                                DATABASE SCHEMA
+================================================================================
+
+TABLE: Accounts
+---------------
+Column Name      | Data Type | Constraints
+-----------------|-----------|------------------------------------------
+Acc_Number       | INTEGER   | PRIMARY KEY (auto-increment)
+First_Name       | TEXT      | NOT NULL, CHECK(length >= 2)
+Last_Name        | TEXT      | NOT NULL, CHECK(length >= 2)  
+Pin              | TEXT      | NOT NULL, UNIQUE, CHECK(length = 4 AND numeric)
+Balance          | REAL      | DEFAULT 0, CHECK(Balance >= 0)
+Creation_Date    | TEXT      | DEFAULT CURRENT_TIMESTAMP
+
+================================================================================
+                                ERROR HANDLING
+================================================================================
+
+EXCEPTION TYPES:
+----------------
+
+1. ValueError("PIN_ALREADY_EXISTS")
+   - Raised when creating account with existing PIN
+   - Handled in create_account_interface()
+
+2. ValueError("DATABASE_ERROR")
+   - Raised for general database operation failures
+   - Handled with generic error messages
+
+3. sqlite3.IntegrityError
+   - Database constraint violations
+   - Caught and converted to user-friendly messages
+
+4. sqlite3.OperationalError
+   - Database connection/operation issues
+   - Handled gracefully with error messages
+
+INPUT VALIDATION:
+-----------------
+
+- Account Numbers: Must be numeric
+- PINs: Must be exactly 4 digits
+- Names: Must be ≥2 characters, alphabetic only
+- Amounts: Must be numeric and positive
+- Admin PIN: Must match "2008" exactly
+
+================================================================================
+                                SECURITY FEATURES
+================================================================================
+
+1. PIN Protection:
+   - Unique PIN requirement
+   - 4-digit numeric validation
+   - Database-level uniqueness constraint
+
+2. Admin Access:
+   - Hardcoded admin PIN ("2008")
+   - Multiple confirmation for destructive operations
+   - Separate authentication for admin functions
+
+3. Data Validation:
+   - Input sanitization for all user inputs
+   - Type checking for numeric inputs
+   - Length validation for text inputs
+
+4. Database Security:
+   - SQL injection prevention using parameterized queries
+   - Constraint validation at database level
+   - Transaction-based operations
+
+================================================================================
+                                DEPENDENCIES
+================================================================================
+
+REQUIRED LIBRARIES:
+-------------------
+
+1. colorama
+   Purpose: Cross-platform colored terminal text
+   Usage: Menu styling, status messages, banners
+   Installation: pip install colorama
+
+2. sqlite3
+   Purpose: Database operations
+   Usage: Account data persistence
+   Note: Built into Python standard library
+
+3. os
+   Purpose: Operating system interface
+   Usage: Screen clearing functionality
+   Note: Built into Python standard library
+
+4. time
+   Purpose: Time-related functions
+   Usage: Loading animation delays
+   Note: Built into Python standard library
+
+================================================================================
+                                USAGE EXAMPLES
+================================================================================
+
+CREATING AN ACCOUNT:
+--------------------
+1. Run main.py
+2. Select option [1] Create New Account
+3. Enter first name (≥2 chars, letters only)
+4. Enter last name (≥2 chars, letters only)  
+5. Enter 4-digit PIN (must be unique)
+6. Enter initial deposit amount (≥0)
+7. Note the generated account number
+
+USER LOGIN:
+-----------
+1. Select option [2] User Login
+2. Enter your account number
+3. Enter your 4-digit PIN
+4. Access account menu for banking operations
+
+ADMIN ACCESS:
+-------------
+1. Select option [3] Admin Panel
+2. Enter admin PIN: 2008
+3. Access administrative functions
+
+================================================================================
+                                PROJECT STATUS
+================================================================================
+
+COMPLETION: 100% FUNCTIONAL
+
+IMPLEMENTED FEATURES:
+✅ Account creation and management
+✅ User authentication and login
+✅ Money deposits and withdrawals
+✅ Balance checking
+✅ PIN and name changes
+✅ Complete admin panel
+✅ SQLite database persistence
+✅ Colorful user interface
+✅ Input validation and error handling
+✅ Security features
+
+OPTIONAL ENHANCEMENTS:
+⭕ utils.py helper functions (not required)
+⭕ Transaction history logging
+⭕ Interest calculation
+⭕ Account types (savings, checking)
+⭕ Transfer between accounts
+
+================================================================================
+                            TROUBLESHOOTING
+================================================================================
+
+COMMON ISSUES:
+--------------
+
+1. "Module 'colorama' not found"
+   Solution: pip install colorama
+
+2. Database errors
+   Solution: Delete database.db file - it will be recreated automatically
+
+3. PIN already exists error
+   Solution: Choose a different 4-digit PIN
+
+4. Screen not clearing properly
+   Solution: Check terminal compatibility with cls/clear commands
+
+================================================================================
+                                DEVELOPMENT NOTES
+================================================================================
+
+DESIGN PATTERNS USED:
+---------------------
+- Object-Oriented Programming (OOP) with BankAccount class
+- Separation of Concerns (UI, Business Logic, Data Access)
+- Input Validation Pattern
+- Menu-Driven Interface Pattern
+
+CODE ORGANIZATION:
+------------------
+- main.py: Entry point and application flow
+- account.py: Business logic and data models
+- interface.py: User interface and input handling
+- admin.py: Administrative functionality
+
+BEST PRACTICES IMPLEMENTED:
+---------------------------
+- Parameterized SQL queries (SQL injection prevention)
+- Input validation at multiple levels
+- Error handling with user-friendly messages
+- Consistent code formatting and documentation
+- Modular function design
+
+================================================================================
+                                END OF DOCUMENTATION
+================================================================================
+
+Created: June 24, 2025
+Version: 1.0
+Author: Smart Bank Development Team
+Contact: For support and questions about this banking system
+================================================================================

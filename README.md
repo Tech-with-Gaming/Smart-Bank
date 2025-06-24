@@ -168,7 +168,7 @@ pip install colorama
 ## 📝 Documentation
 
 For detailed technical documentation including all functions, classes, and implementation details, see:
-- **[DOCUMENTATION.txt](DOCUMENTATION.txt)** - Complete technical reference
+- **[DOCUMENTATION.txt](Smart Bank/DOCUMENTATION.txt)** - Complete technical reference
 
 ## 🚧 Future Enhancements
 

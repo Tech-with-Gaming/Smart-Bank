@@ -14,7 +14,6 @@ A comprehensive console-based banking application written in Python with SQLite 
 ↪    ├── 📄 account.py           - Core banking operations and database models  
 ↪    ├── 📄 interface.py         - User interface and menu systems
 ↪    ├── 📄 admin.py             - Administrative panel and functions
-↪    ├── 📄 utils.py             - Utility functions (optional helpers)
 ↪    ├── 📄 DOCUMENTATION.txt    - Detailed technical documentation
 └── 📄 database.db          - SQLite database (auto-generated)
 └── 📄 README.md            - Project documentation

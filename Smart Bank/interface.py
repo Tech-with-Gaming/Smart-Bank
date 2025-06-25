@@ -146,7 +146,7 @@ def account_menu(account):
 def display_balance(account):
     print(Fore.YELLOW + Style.BRIGHT + "\n=== ACCOUNT BALANCE ===" + Style.RESET_ALL)
     balance = account.view_balance()
-    print(Fore.GREEN + f"💰 Current Balance: ${balance:.2f}" + Style.RESET_ALL)
+    print(Fore.GREEN + f"💰 Current Balance: ${balance:,.2f}" + Style.RESET_ALL)
 
 
 
@@ -158,8 +158,8 @@ def deposit_money(account):
             amount = float(amount_input)
             if amount > 0:
                 if account.deposit(amount):
-                    print(Fore.GREEN + f"✅ Successfully deposited ${amount:.2f}" + Style.RESET_ALL)
-                    print(Fore.YELLOW + f"💰 New Balance: ${account.view_balance():.2f}" + Style.RESET_ALL)
+                    print(Fore.GREEN + f"✅ Successfully deposited ${amount:,.2f}" + Style.RESET_ALL)
+                    print(Fore.YELLOW + f"💰 New Balance: ${account.view_balance():,.2f}" + Style.RESET_ALL)
                 else:
                     print(Fore.RED + "❌ Deposit failed!" + Style.RESET_ALL)
                 break
@@ -172,7 +172,7 @@ def deposit_money(account):
 
 def withdraw_money(account):
     print(Fore.YELLOW + Style.BRIGHT + "\n=== WITHDRAW MONEY ===" + Style.RESET_ALL)
-    print(Fore.CYAN + f"Available Balance: ${account.view_balance():.2f}" + Style.RESET_ALL)
+    print(Fore.CYAN + f"Available Balance: ${account.view_balance():,.2f}" + Style.RESET_ALL)
     
     while True:
         amount_input = input(Fore.CYAN + "Enter amount to withdraw ($): " + Style.RESET_ALL)
@@ -180,8 +180,8 @@ def withdraw_money(account):
             amount = float(amount_input)
             if amount > 0:
                 if account.withdraw(amount):
-                    print(Fore.GREEN + f"✅ Successfully withdrew ${amount:.2f}" + Style.RESET_ALL)
-                    print(Fore.YELLOW + f"💰 New Balance: ${account.view_balance():.2f}" + Style.RESET_ALL)
+                    print(Fore.GREEN + f"✅ Successfully withdrew ${amount:,.2f}" + Style.RESET_ALL)
+                    print(Fore.YELLOW + f"💰 New Balance: ${account.view_balance():,.2f}" + Style.RESET_ALL)
                 else:
                     print(Fore.RED + "❌ Insufficient funds or invalid amount!" + Style.RESET_ALL)
                 break
@@ -272,7 +272,7 @@ def create_account_interface():
         print(Fore.GREEN + Style.BRIGHT + "\n✅ Account Created Successfully!" + Style.RESET_ALL)
         print(Fore.YELLOW + f"📋 Your Account Number: {account_number}")
         print(Fore.YELLOW + f"👤 Account Holder: {first_name} {last_name}")
-        print(Fore.YELLOW + f"💰 Initial Balance: ${balance:.2f}" + Style.RESET_ALL)
+        print(Fore.YELLOW + f"💰 Initial Balance: ${balance:,.2f}" + Style.RESET_ALL)
         print(Fore.CYAN + "\n🔒 Please remember your account number and PIN for login!" + Style.RESET_ALL)
         
     except Exception as e:

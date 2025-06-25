@@ -71,7 +71,7 @@ def remove_account():
             print(Fore.YELLOW + f"⚠️  You are about to delete account:")
             print(f"   Account Number: {account_number}")
             print(f"   Account Holder: {full_name}")
-            print(f"   Balance: ${account_data[4]:.2f}" + Style.RESET_ALL)
+            print(f"   Balance: ${account_data[4]:,.2f}" + Style.RESET_ALL)
             
             confirm = input(Fore.RED + "Are you sure? Type 'DELETE' to confirm: " + Style.RESET_ALL)
             
@@ -118,7 +118,7 @@ def admin_change_pin():
     print(f"Account Number: {result[0]}")
     print(f"Account Holder: {result[1]} {result[2]}")
     print(f"Current PIN: {result[3]}")
-    print(f"Balance: ${result[4]:.2f}" + Style.RESET_ALL)
+    print(f"Balance: ${result[4]:,.2f}" + Style.RESET_ALL)
     
     while True:
         new_pin = input(Fore.CYAN + "Enter new 4-digit PIN: " + Style.RESET_ALL)
@@ -202,7 +202,7 @@ def view_all_accounts():
         print(f"{acc_num:<8} {first_name:<15} {last_name:<15} {pin:<6} ${balance:<11.2f} {created:<20}")
     
     print("=" * 90)
-    print(Fore.YELLOW + f"Total Bank Balance: ${total_balance:.2f}" + Style.RESET_ALL)
+    print(Fore.YELLOW + f"Total Bank Balance: ${total_balance:,.2f}" + Style.RESET_ALL)
 
 
 

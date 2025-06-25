@@ -14,11 +14,10 @@ A comprehensive console-based banking application written in Python with SQLite 
 ↪    ├── 📄 account.py           - Core banking operations and database models  
 ↪    ├── 📄 interface.py         - User interface and menu systems
 ↪    ├── 📄 admin.py             - Administrative panel and functions
-↪    ├── 📄 utils.py             - Utility functions (optional helpers)
 ↪    ├── 📄 DOCUMENTATION.txt    - Detailed technical documentation
 └── 📄 database.db          - SQLite database (auto-generated)
 └── 📄 README.md            - Project documentation
-└── 📁 screenshots/          - Screenshots of the application's functionality
+└── 📁 screenshots/         - Screenshots of the application's functionality
 ```
 
 
@@ -168,7 +167,7 @@ pip install colorama
 ## 📝 Documentation
 
 For detailed technical documentation including all functions, classes, and implementation details, see:
-- **[DOCUMENTATION.txt](DOCUMENTATION.txt)** - Complete technical reference
+- **Smart Bank/DOCUMENTATION.txt** - Complete technical reference
 
 ## 🚧 Future Enhancements
 

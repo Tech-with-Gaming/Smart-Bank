@@ -11,7 +11,7 @@ def clear_screen():
 
 
 def print_banner():
-    print(Fore.BLUE + Style.BRIGHT + r"""________                        _____  ________              ______  
+    print(Fore.WHITE + Style.BRIGHT + r"""________                        _____  ________              ______  
 __  ___/______ _________ _________  /_ ___  __ )_____ __________  /__
 _____ \__  __ `__ \  __ `/_  ___/  __/ __  __  |  __ `/_  __ \_  //_/
 ____/ /_  / / / / / /_/ /_  /   / /_   _  /_/ // /_/ /_  / / /  ,<   
@@ -19,7 +19,7 @@ ____/ /_  / / / / / /_/ /_  /   / /_   _  /_/ // /_/ /_  / / /  ,<
 
 
 def loading_animation():
-    print(Fore.BLUE + "Loading", end="")
+    print(Fore.WHITE + Style.BRIGHT + "Loading", end="")
     for i in range(3):
         time.sleep(0.5)
         print(".", end="", flush=True)

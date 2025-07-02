@@ -137,9 +137,26 @@ class BankAccount:
         }
 
 
+def create_table_if_not_exists():
+    conn = sqlite3.connect("database.db")
+    cursor = conn.cursor()
+    
+    cursor.execute("""CREATE TABLE IF NOT EXISTS Accounts (
+                   Acc_Number INTEGER PRIMARY KEY,
+                   First_Name TEXT NOT NULL CHECK(length(First_Name) >= 2),
+                   Last_Name TEXT NOT NULL CHECK(length(Last_Name) >= 2),
+                   Pin TEXT NOT NULL UNIQUE CHECK(length(Pin) = 4 AND Pin GLOB '[0-9][0-9][0-9][0-9]'),
+                   Balance REAL DEFAULT 0 CHECK(Balance >= 0),
+                   Creation_Date TEXT DEFAULT CURRENT_TIMESTAMP
+                   )""")
+    
+    conn.commit()
+    conn.close()
+
 
 def check_pin_exists(pin):
     try:
+        create_table_if_not_exists()
         conn = sqlite3.connect("database.db")
         cursor = conn.cursor()
         
@@ -165,6 +182,7 @@ def check_pin_exists(pin):
 
 def load_account_from_database(account_number, pin):
     try:
+        create_table_if_not_exists()
         conn = sqlite3.connect("database.db")
         cursor = conn.cursor()
         
@@ -184,6 +202,7 @@ def load_account_from_database(account_number, pin):
 
 
 def get_all_accounts():
+    create_table_if_not_exists()
     conn = sqlite3.connect("database.db")
     cursor = conn.cursor()
     
@@ -196,6 +215,7 @@ def get_all_accounts():
 
 
 def delete_account_from_database(account_number):
+    create_table_if_not_exists()
     conn = sqlite3.connect("database.db")
     cursor = conn.cursor()
     

@@ -2,6 +2,7 @@ import colorama
 from colorama import Fore, Style
 import sqlite3
 import os
+import pwinput
 from account import get_all_accounts, delete_account_from_database, load_account_from_database, BankAccount
 
 colorama.init()
@@ -19,12 +20,12 @@ def admin_login():
     print(Fore.RED + Style.BRIGHT + "=== ADMIN LOGIN ===" + Style.RESET_ALL)
     
     while True:
-        admin_pin = input(Fore.CYAN + "Enter Admin PIN: " + Style.RESET_ALL)
+        admin_pin = pwinput.pwinput(prompt=Fore.CYAN + "Enter Admin PIN: " + Style.RESET_ALL, mask="*")
         if admin_pin == ADMIN_PIN:
-            print(Fore.GREEN + "✅ Access Granted!" + Style.RESET_ALL)
+            print(Fore.GREEN + "[+] Access Granted!" + Style.RESET_ALL)
             return True
         else:
-            print(Fore.RED + "❌ Invalid PIN! Access Denied." + Style.RESET_ALL)
+            print(Fore.RED + "[X] Invalid PIN! Access Denied." + Style.RESET_ALL)
             retry = input(Fore.YELLOW + "Try again? (y/n): " + Style.RESET_ALL).lower()
             if retry != 'y':
                 return False
@@ -62,13 +63,13 @@ def remove_account():
             
             account_exists = any(acc[0] == account_number for acc in accounts)
             if not account_exists:
-                print(Fore.RED + "❌ Account number not found!" + Style.RESET_ALL)
-                continue
+                print(Fore.RED + "[X] Account number not found!" + Style.RESET_ALL)
+                return
             
             account_data = next(acc for acc in accounts if acc[0] == account_number)
             full_name = f"{account_data[1]} {account_data[2]}"
             
-            print(Fore.YELLOW + f"⚠️  You are about to delete account:")
+            print(Fore.YELLOW + f"[!] You are about to delete account:")
             print(f"   Account Number: {account_number}")
             print(f"   Account Holder: {full_name}")
             print(f"   Balance: ${account_data[4]:,.2f}" + Style.RESET_ALL)
@@ -77,15 +78,15 @@ def remove_account():
             
             if confirm == "DELETE":
                 if delete_account_from_database(account_number):
-                    print(Fore.GREEN + f"✅ Account {account_number} deleted successfully!" + Style.RESET_ALL)
+                    print(Fore.GREEN + f"[+] Account {account_number} deleted successfully!" + Style.RESET_ALL)
                 else:
-                    print(Fore.RED + "❌ Failed to delete account!" + Style.RESET_ALL)
+                    print(Fore.RED + "[X] Failed to delete account!" + Style.RESET_ALL)
             else:
                 print(Fore.YELLOW + "Deletion cancelled." + Style.RESET_ALL)
             break
             
         except ValueError:
-            print(Fore.RED + "❌ Please enter a valid account number!" + Style.RESET_ALL)
+            print(Fore.RED + "[X] Please enter a valid account number!" + Style.RESET_ALL)
 
 
 
@@ -102,7 +103,7 @@ def admin_change_pin():
             account_number = int(acc_input)
             break
         except ValueError:
-            print(Fore.RED + "❌ Please enter a valid account number!" + Style.RESET_ALL)
+            print(Fore.RED + "[X] Please enter a valid account number!" + Style.RESET_ALL)
     
     conn = sqlite3.connect("database.db")
     cursor = conn.cursor()
@@ -110,7 +111,7 @@ def admin_change_pin():
     result = cursor.fetchone()
     
     if not result:
-        print(Fore.RED + "❌ Account not found!" + Style.RESET_ALL)
+        print(Fore.RED + "[X] Account not found!" + Style.RESET_ALL)
         conn.close()
         return
     
@@ -125,15 +126,15 @@ def admin_change_pin():
         if len(new_pin) == 4 and new_pin.isdigit():
             cursor.execute("SELECT COUNT(*) FROM Accounts WHERE Pin = ? AND Acc_Number != ?", (new_pin, account_number))
             if cursor.fetchone()[0] > 0:
-                print(Fore.RED + "❌ This PIN is already in use by another account!" + Style.RESET_ALL)
+                print(Fore.RED + "[X] This PIN is already in use by another account!" + Style.RESET_ALL)
                 continue
             
             cursor.execute("UPDATE Accounts SET Pin = ? WHERE Acc_Number = ?", (new_pin, account_number))
             conn.commit()
-            print(Fore.GREEN + f"✅ PIN changed successfully for account {account_number}!" + Style.RESET_ALL)
+            print(Fore.GREEN + f"[+] PIN changed successfully for account {account_number}!" + Style.RESET_ALL)
             break
         else:
-            print(Fore.RED + "❌ PIN must be exactly 4 digits!" + Style.RESET_ALL)
+            print(Fore.RED + "[X] PIN must be exactly 4 digits!" + Style.RESET_ALL)
     
     conn.close()
 
@@ -149,7 +150,7 @@ def clear_database():
         print(Fore.YELLOW + "Database is already empty." + Style.RESET_ALL)
         return
     
-    print(Fore.YELLOW + f"⚠️  WARNING: This will delete ALL {account_count} accounts!")
+    print(Fore.YELLOW + f"[!] WARNING: This will delete ALL {account_count} accounts!")
     print("This action cannot be undone!" + Style.RESET_ALL)
     
     confirm1 = input(Fore.RED + "Type 'CLEAR' to proceed: " + Style.RESET_ALL)
@@ -175,9 +176,9 @@ def clear_database():
         deleted_count = cursor.rowcount
         conn.close()
         
-        print(Fore.GREEN + f"✅ Database cleared! {deleted_count} accounts deleted." + Style.RESET_ALL)
+        print(Fore.GREEN + f"[+] Database cleared! {deleted_count} accounts deleted." + Style.RESET_ALL)
     except Exception as e:
-        print(Fore.RED + f"❌ Error clearing database: {str(e)}" + Style.RESET_ALL)
+        print(Fore.RED + f"[X] Error clearing database: {str(e)}" + Style.RESET_ALL)
 
 
 
@@ -215,11 +216,11 @@ def admin_menu():
 /_/ \_\__,_|_|_|_|_|_||_| |_| \__,_|_||_\___|_|""" + Style.RESET_ALL)
         
         print(Fore.CYAN + "\n" + "="*50)
-        print(Fore.GREEN + "[1] 👁️  View All Accounts")
-        print(Fore.GREEN + "[2] 🗑️  Remove Account")
-        print(Fore.GREEN + "[3] 🔐 Change User PIN")
-        print(Fore.GREEN + "[4] 🧹 Clear Database")
-        print(Fore.GREEN + "[5] 🚪 Back to Main Menu")
+        print(Fore.GREEN + "[1] [>] View All Accounts")
+        print(Fore.GREEN + "[2] [X] Remove Account")
+        print(Fore.GREEN + "[3] [>] Change User PIN")
+        print(Fore.GREEN + "[4] [X] Clear Database")
+        print(Fore.GREEN + "[5] [<<] Back to Main Menu")
         print(Fore.CYAN + "="*50 + Style.RESET_ALL)
         
         choice = input(Fore.GREEN + "Enter your Choice [1-5]: " + Style.RESET_ALL)
@@ -236,6 +237,6 @@ def admin_menu():
             print(Fore.CYAN + "Returning to main menu..." + Style.RESET_ALL)
             break
         else:
-            print(Fore.RED + "❌ Invalid choice! Please try again." + Style.RESET_ALL)
+            print(Fore.RED + "[X] Invalid choice! Please try again." + Style.RESET_ALL)
         
         input(Fore.CYAN + "\nPress Enter to continue..." + Style.RESET_ALL)

@@ -38,6 +38,7 @@ def loading_animation():
 
 
 def main():
+    clear_screen()
     print_banner()
     typing_animation("Welcome to Smart Bank! Starting up the system, Please Wait...")
     loading_animation()

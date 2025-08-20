@@ -197,7 +197,8 @@ def load_account_from_database(account_number, pin):
             return account
         return None
     except sqlite3.OperationalError:
-        print("❌ Database error occurred while loading account.")
+        print("[X] Database error occurred while loading account.")
+        return None
 
 
 

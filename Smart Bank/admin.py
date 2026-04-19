@@ -200,7 +200,7 @@ def view_all_accounts():
     for account in accounts:
         acc_num, first_name, last_name, pin, balance, created = account
         total_balance += balance
-        print(f"{acc_num:<8} {first_name:<15} {last_name:<15} {pin:<6} ${balance:<11.2f} {created:<20}")
+        print(f"{acc_num:<8} {first_name:<15} {last_name:<15} {pin:<6} ${balance:<11,.2f} {created:<20}")
     
     print("=" * 90)
     print(Fore.YELLOW + f"Total Bank Balance: ${total_balance:,.2f}" + Style.RESET_ALL)
